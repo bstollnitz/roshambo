@@ -53,6 +53,11 @@ class RoshamboModel(pl.LightningModule):
         self.log('val_loss', loss, prog_bar=True)
         self.log('val_acc', acc, prog_bar=True)
 
+    def test_step(self, batch, batch_idx):
+        loss, acc = self.__compute(batch)
+        self.log('test_loss', loss, prog_bar=True)
+        self.log('test_acc', acc, prog_bar=True)
+
     def configure_optimizers(self):
         optimizer = optim.SGD(self.parameters(), lr=self.lr)
         scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.1)

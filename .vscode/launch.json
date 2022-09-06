@@ -31,9 +31,18 @@
       "name": "PL Trainer",
       "type": "python",
       "request": "launch",
-      "cwd": "${workspaceFolder}",
+      "cwd": "${workspaceFolder}/ai",
       "program": "trainer.py",
-      "args": ["--config", "config.yml"],
+      "args": ["fit", "--config", "config.yml", "--trainer.accelerator", "cpu"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "PL Tester",
+      "type": "python",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/ai",
+      "program": "trainer.py",
+      "args": ["test", "--config", "config.yml", "--trainer.accelerator", "cpu"],
       "console": "integratedTerminal"
     },
     {

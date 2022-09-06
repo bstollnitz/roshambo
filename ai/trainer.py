@@ -1,3 +1,4 @@
+import shutil
 import mlflow
 import warnings
 from pathlib import Path
@@ -13,15 +14,22 @@ class RoshamboCLI(LightningCLI):
         model = RoshamboModel.load_from_checkpoint(best_model)
         model_dir = Path(self.trainer.default_root_dir).resolve() / 'model'
         model_params, file_size = model.save(model_dir, self.datamodule.classes)
+        shutil.copyfile(best_model, model_dir / 'model.ckpt')
         mlflow.log_params({
           "param_size": "{:,}".format(model_params),
           "model_size": "{:,}".format(file_size),
           "model_type": model.model_type
         })
+
+    def before_test(self):
+        print('Loading model!')
+        best_model = Path(self.trainer.default_root_dir).resolve() / 'model/model.ckpt'
+        model = RoshamboModel.load_from_checkpoint(best_model)
+        self.model = model
         
 if __name__ == '__main__':
     warnings.filterwarnings("ignore")
     mlflow.pytorch.autolog()
     with mlflow.start_run() as run:
-      cli = RoshamboCLI(RoshamboModel, RoshamboDataModule)
+        cli = RoshamboCLI(RoshamboModel, RoshamboDataModule)
       
