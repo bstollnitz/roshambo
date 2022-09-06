@@ -1,3 +1,4 @@
+$schema: https://azuremlschemas.azureedge.net/latest/managedOnlineDeployment.schema.json
 name: blue
 app_insights_enabled: true
 model: azureml:roshambo:1
