@@ -1,5 +1,5 @@
 $schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
-name: pytorch-lightning
+name: pytorch-lightning-ignite
 version: 9
 tags:
   framework: PyTorch Lightning
