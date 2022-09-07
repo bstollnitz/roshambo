@@ -12,5 +12,5 @@ inputs:
     type: uri_folder
     path: azureml:rpsn@latest
     mode: ro_mount
-environment: azureml:pytorch-lightning:9
+environment: azureml:pytorch-lightning@latest
 compute: azureml:cluster-gpu
