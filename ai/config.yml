@@ -29,6 +29,6 @@ model:
   classes: 4
   lr: .01
 data:
-  data_dir: data/images
+  data_dir: data
   batch_size: 32
   train_split: 0.8

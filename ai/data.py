@@ -1,5 +1,6 @@
 import math
 import torch
+from pathlib import Path
 from typing import Optional
 import pytorch_lightning as pl
 from torchvision import datasets, transforms
@@ -8,13 +9,11 @@ from torch.utils.data import DataLoader, random_split
 class RoshamboDataModule(pl.LightningDataModule):
     def __init__(self, data_dir: str = "path/to/dir", 
                        batch_size: int = 32,
-                       train_split: float = .8,
-                       test_data_dir: str = "data/test_images"):
+                       train_split: float = .8):
         super().__init__()
         self.data_dir = data_dir
         self.batch_size = batch_size
-        self.train_split = train_split  
-        self.test_data_dir = test_data_dir
+        self.train_split = train_split
 
     def setup(self, stage: Optional[str] = None):
         self.transform = transforms.Compose([
@@ -31,7 +30,7 @@ class RoshamboDataModule(pl.LightningDataModule):
             transforms.Lambda(lambda y: torch.zeros(len(self.classes), dtype=torch.float).scatter_(0, torch.tensor(y), value=1))
         ])
 
-        self.raw_data = datasets.ImageFolder(self.data_dir, 
+        self.raw_data = datasets.ImageFolder(Path(self.data_dir, "images"), 
                                               transform=self.transform, 
                                               target_transform=self.target_transform)
         self.classes = self.raw_data.classes
@@ -43,7 +42,7 @@ class RoshamboDataModule(pl.LightningDataModule):
         self.train_dataset, self.val_dataset = random_split(self.raw_data, 
                                                 [train_sz, val_sz])
 
-        self.test_dataset = datasets.ImageFolder(self.test_data_dir,
+        self.test_dataset = datasets.ImageFolder(Path(self.data_dir, "test_images"),
                                               transform=self.transform, 
                                               target_transform=self.target_transform)
 
