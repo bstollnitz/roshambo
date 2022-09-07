@@ -77,9 +77,13 @@ jobs:
         mkdir model
         cp ./run/artifacts/outputs/model/model.onnx ./model/model.onnx
         cp ./run/artifacts/outputs/model/meta.json ./model/meta.json
-        
-        LAST_MODEL_VER=$(az ml model list -n ${APP_NAME}-model --query "[].version.to_number(@) | max(@)" | tr -d "\r")
-        az ml model create --name ${APP_NAME}-model --local-path ./model --version $((LAST_MODEL_VER+1))
+
+        LAST_MODEL_VER=0
+        MODEL_EXISTS=$(az ml model list -o tsv --query "[?name=='${APP_NAME}-model'][name]" |  wc -l)
+        if [[ MODEL_EXISTS -eq 1 ]]; then
+          LAST_MODEL_VER=$(az ml model list -n ${APP_NAME}-model --query "[].version.to_number(@) | max(@)" | tr -d "\r")
+        fi
+        az ml model create --name ${APP_NAME}-model --path ./model --version $((LAST_MODEL_VER+1))
 
   endpoint:
     runs-on: ubuntu-latest
