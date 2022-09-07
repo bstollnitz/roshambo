@@ -75,8 +75,8 @@ jobs:
       run: |
         az ml job download --name ${APP_NAME}_${GITHUB_RUN_ID} --download-path ./run
         mkdir model
-        cp ./run/${APP_NAME}_${GITHUB_RUN_ID}/outputs/model/model.onnx ./model/model.onnx
-        cp ./run/${APP_NAME}_${GITHUB_RUN_ID}/outputs/model/meta.json ./model/meta.json
+        cp ./run/artifacts/outputs/model/model.onnx ./model/model.onnx
+        cp ./run/artifacts/outputs/model/meta.json ./model/meta.json
         
         LAST_MODEL_VER=$(az ml model list -n ${APP_NAME}-model --query "[].version.to_number(@) | max(@)" | tr -d "\r")
         az ml model create --name ${APP_NAME}-model --local-path ./model --version $((LAST_MODEL_VER+1))
