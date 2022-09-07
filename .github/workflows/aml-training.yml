@@ -43,7 +43,9 @@ jobs:
 
     - name: Run Job
       run: |
-          az ml job create --file ./ai/cloud/job.yml --name $APP_NAME_$GITHUB_RUN_ID --stream 
+          echo name1: $APP_NAME_$GITHUB_RUN_ID
+          echo name2: ${APP_NAME}_${GITHUB_RUN_ID}
+          az ml job create --file ./ai/cloud/job.yml --name ${APP_NAME}_${GITHUB_RUN_ID} --stream 
 
   register:
     needs: [experiment]
