@@ -10,7 +10,7 @@ command: >-
 inputs:
   training_data:
     type: uri_folder
-    path: azureml:rpsn-ignite@latest
+    path: azureml:rpsn@latest
     mode: ro_mount
-environment: azureml:pytorch-lightning-ignite:9
-compute: azureml:gandalf
+environment: azureml:pytorch-lightning:9
+compute: azureml:cluster-gpu

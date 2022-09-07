@@ -78,8 +78,8 @@ jobs:
         cp ./run/$APP_NAME_$GITHUB_RUN_ID/outputs/model/model.onnx ./model/model.onnx
         cp ./run/$APP_NAME_$GITHUB_RUN_ID/outputs/model/meta.json ./model/meta.json
         
-        LAST_MODEL_VER=$(az ml model list -n $APP_NAME-model-ignite --query "[].version.to_number(@) | max(@)" | tr -d "\r")
-        az ml model create --name $APP_NAME-model-ignite --local-path ./model --version $((LAST_MODEL_VER+1))
+        LAST_MODEL_VER=$(az ml model list -n $APP_NAME-model --query "[].version.to_number(@) | max(@)" | tr -d "\r")
+        az ml model create --name $APP_NAME-model --local-path ./model --version $((LAST_MODEL_VER+1))
 
   endpoint:
     runs-on: ubuntu-latest
@@ -108,9 +108,9 @@ jobs:
     - id: deployments
       name: check endpoint
       run: |
-        ENDPOINT_EXISTS=$(az ml online-endpoint list -o tsv --query "[?name=='$APP_NAME-endpoint-ignite'][name]" |  wc -l)
+        ENDPOINT_EXISTS=$(az ml online-endpoint list -o tsv --query "[?name=='$APP_NAME-endpoint'][name]" |  wc -l)
         if [[ ENDPOINT_EXISTS -ne 1 ]]; then
-            az ml online-endpoint create -n $APP_NAME-endpoint-ignite -f ./ai/cloud/endpoint.yml    
+            az ml online-endpoint create -n $APP_NAME-endpoint -f ./ai/cloud/endpoint.yml    
         else
             echo "endpoint exists"
         fi
@@ -142,18 +142,18 @@ jobs:
           az config set defaults.group=${{secrets.AML_RG}}
     - name: Add Deployment
       run: |
-        LATEST_MODEL_VERSION=$(az ml model list -n $APP_NAME-model-ignite --query "[].version.to_number(@) | max(@)" | tr -d "\r")
-        MODEL_REF=azureml:$APP_NAME-model-ignite:$LATEST_MODEL_VERSION
+        LATEST_MODEL_VERSION=$(az ml model list -n $APP_NAME-model --query "[].version.to_number(@) | max(@)" | tr -d "\r")
+        MODEL_REF=azureml:$APP_NAME-model:$LATEST_MODEL_VERSION
 
         echo $MODEL_REF
-        az ml online-deployment create --name $APP_NAME-$GITHUB_RUN_ID --endpoint $APP_NAME-endpoint-ignite -f ./ai/cloud/deployment.yml --set model=$MODEL_REF
+        az ml online-deployment create --name $APP_NAME-$GITHUB_RUN_ID --endpoint $APP_NAME-endpoint -f ./ai/cloud/deployment.yml --set model=$MODEL_REF
 
         # if PROD does not exist, mark this as prod and exit
-        PROD_DEPLOYMENT=$(az ml online-endpoint show -n $APP_NAME-endpoint-ignite -o tsv --query "tags.PROD_DEPLOYMENT")
+        PROD_DEPLOYMENT=$(az ml online-endpoint show -n $APP_NAME-endpoint -o tsv --query "tags.PROD_DEPLOYMENT")
         if [[ -z "$PROD_DEPLOYMENT" ]]; then
             # tag the current deployment as prod and set traffic to 100%
-            az ml online-endpoint update --name $APP_NAME-endpoint-ignite --traffic "$APP_NAME-$GITHUB_RUN_ID=100" --set tags.PROD_DEPLOYMENT=$APP_NAME_$GITHUB_RUN_ID
+            az ml online-endpoint update --name $APP_NAME-endpoint --traffic "$APP_NAME-$GITHUB_RUN_ID=100" --set tags.PROD_DEPLOYMENT=$APP_NAME_$GITHUB_RUN_ID
         else
             # modify traffic to siphon 10% to new deployment
-            az ml online-endpoint update -n $APP_NAME-endpoint-ignite --traffic "$PROD_DEPLOYMENT=90 $APP_NAME-$GITHUB_RUN_ID=10"    
+            az ml online-endpoint update -n $APP_NAME-endpoint --traffic "$PROD_DEPLOYMENT=90 $APP_NAME-$GITHUB_RUN_ID=10"    
         fi

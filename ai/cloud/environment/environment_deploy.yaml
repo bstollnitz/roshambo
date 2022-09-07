@@ -1,5 +1,5 @@
 $schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
-name: pytorch-lightning-gpu-deploy-ignite
+name: pytorch-lightning-gpu-deploy
 version: 4
 tags:
   framework: onnxruntime-gpu
