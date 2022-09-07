@@ -153,12 +153,3 @@ if __name__ == '__main__':
     inf('https://aiadvocate.z5.web.core.windows.net/paper.png', 'paper')
     inf('https://aiadvocate.z5.web.core.windows.net/scissors.png', 'scissors')   
     inf('bad_uri', 'Bad Uri')
-
-    with open('testimage.txt', 'r') as f:
-        img = f.read()
-        inf(img, 'rock')
-
-
-    with open('fullimage.txt', 'r') as f:
-        img = f.read()
-        inf(img, 'none')
