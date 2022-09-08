@@ -1,4 +1,5 @@
-import axios from "axios";
+// import axios from "axios";
+import fetch from "node-fetch";
 import { RestError } from "@azure/core-http";
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
 
@@ -6,7 +7,6 @@ const inferenceApi = process.env["INFERENCE_ENDPOINT"] || '';
 const inferenceKey = process.env["INFERENCE_KEY"] || '';
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
-    context.log('HTTP trigger function processed a request.');
     try {
         // const response = await axios.post(inferenceApi, req.body,
         //     {
@@ -16,13 +16,18 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
         //         },
         //     }
         // );
+        const response = await fetch(inferenceApi, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${inferenceKey}`,
+            },
+            body: JSON.stringify(req.body)
+        });
+        const text = await response.text()
         context.res = {
             status: 200,
-            // body: response.data
-            body: {
-                api: inferenceApi,
-                key: inferenceKey,
-            }
+            body: text
         };
     } catch (error) {
         const e = error as RestError;
