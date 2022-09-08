@@ -7,18 +7,18 @@ const inferenceKey = process.env["INFERENCE_KEY"] || '';
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     try {
-        const response = await fetch(inferenceApi, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${inferenceKey}`,
-            },
-            body: req.rawBody
-        });
-        const text = await response.text()
+        // const response = await fetch(inferenceApi, {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //         Authorization: `Bearer ${inferenceKey}`,
+        //     },
+        //     body: req.rawBody
+        // });
+        // const text = await response.text()
         context.res = {
             status: 200,
-            body: text
+            body: req.rawBody
         };
     } catch (error) {
         const e = error as RestError;
