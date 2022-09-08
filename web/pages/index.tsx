@@ -28,7 +28,7 @@ export default function Home() {
   const image = useRef<HTMLImageElement>(null);
   const videoRef = useRef <VideoRef>(null);
 
-  const setFrameOld = (frame: string) => {
+  const setFrame = (frame: string) => {
     (async () => {
       const options: RequestInit = {
         method: "POST",
@@ -38,29 +38,13 @@ export default function Home() {
         },
       };
 
-      image.current && (image.current.src = frame);
-      const response = await fetch("/api/analyze", options);
-      const pred: Prediction = await response.json();
-      setPrediction(pred);
-    })();
-  };
-
-  const setFrame = (frame: string) => {
-    (async () => {
-      if (image.current)  {
+      if (image.current) {
         image.current.src = frame;
       }
-
-      const options: RequestInit = {
-        method: "POST",
-        body: JSON.stringify({ name: "Beatriz" }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      const response = await fetch("/api/message", options);
-      const text = await response.text()
-      console.log('API returned', text)
+      const response = await fetch("/api/analyze", options);
+      const pred: Prediction = await response.json();
+      console.log('API returned', pred)
+      setPrediction(pred);
     })();
   };
 
