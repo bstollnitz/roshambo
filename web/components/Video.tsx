@@ -46,7 +46,7 @@ export const Video = forwardRef<VideoRef, Props>(
     };
 
     useEffect(() => {
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      if (device && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         (async () => {
           try {
             let stream = await navigator.mediaDevices.getUserMedia({
@@ -71,7 +71,7 @@ export const Video = forwardRef<VideoRef, Props>(
 
     return (
       <video
-        className={className}
+        className={`${className} bg-gray-300`}
         ref={videoRef}
         width={width}
         height={height}

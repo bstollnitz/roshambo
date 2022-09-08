@@ -28,7 +28,7 @@ export default function Home() {
   const image = useRef<HTMLImageElement>(null);
   const videoRef = useRef <VideoRef>(null);
 
-  const setFrame = (frame: string) => {
+  const setFrameOld = (frame: string) => {
     (async () => {
       const options: RequestInit = {
         method: "POST",
@@ -42,6 +42,25 @@ export default function Home() {
       const response = await fetch("/api/analyze", options);
       const pred: Prediction = await response.json();
       setPrediction(pred);
+    })();
+  };
+
+  const setFrame = (frame: string) => {
+    (async () => {
+      if (image.current)  {
+        image.current.src = frame;
+      }
+
+      const options: RequestInit = {
+        method: "POST",
+        body: JSON.stringify({ name: "Beatriz" }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const response = await fetch("/api/message", options);
+      const text = await response.text()
+      console.log('API returned', text)
     })();
   };
 
@@ -65,26 +84,24 @@ export default function Home() {
         <div className="grid max-w-screen-xl gap-6 mx-auto md:grid-cols-2 lg:gap-x-8">
           <div className="px-6 pt-6 pb-6 bg-gray-200 rounded">
             <div>
-              <button
-                className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700"
-                onClick={handleSubmit}
-              >
-                Submit
-              </button>
-            </div>
-            <div>
               <DeviceSelector onSelect={setVideoId} />
             </div>
             <div>
               <Video
                 className="mt-3"
-                height={320}
-                width={240}
+                width={320}
+                height={240}
                 device={videoId}
                 onVideoSet={setSettings}
                 ref={videoRef}
               />
             </div>
+            <button
+              className="my-2 px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700"
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
           </div>
           <div className="px-6 pt-6 pb-6 bg-gray-200 rounded">
             <div>

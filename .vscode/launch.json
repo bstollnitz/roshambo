@@ -33,7 +33,13 @@
       "request": "launch",
       "cwd": "${workspaceFolder}/ai",
       "program": "trainer.py",
-      "args": ["fit", "--config", "config.yml", "--trainer.accelerator", "cpu"],
+      "args": [
+        "fit",
+        "--config",
+        "config.yml",
+        "--trainer.accelerator",
+        "cpu"
+      ],
       "console": "integratedTerminal"
     },
     {
@@ -42,7 +48,13 @@
       "request": "launch",
       "cwd": "${workspaceFolder}/ai",
       "program": "trainer.py",
-      "args": ["test", "--config", "config.yml", "--trainer.accelerator", "cpu"],
+      "args": [
+        "test",
+        "--config",
+        "config.yml",
+        "--trainer.accelerator",
+        "cpu"
+      ],
       "console": "integratedTerminal"
     },
     {
@@ -52,6 +64,13 @@
       "program": "${file}",
       "cwd": "${fileDirname}",
       "console": "integratedTerminal"
+    },
+    {
+      "name": "Attach to Node Functions",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "preLaunchTask": "func: host start"
     }
   ]
 }

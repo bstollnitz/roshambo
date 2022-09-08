@@ -31,46 +31,6 @@ export const Navigation = () => {
             />
           </svg>
         </button>
-        <div className="absolute inset-x-0 z-50 w-full py-2 origin-top-right transform top-10 ransition md:hidden">
-          <nav className="p-3 transform bg-white rounded-lg shadow-lg">
-            <a
-              href="#"
-              className="block px-6 py-3 font-semibold border-b hover:opacity-70 border-blue-50"
-            >
-              Home
-            </a>
-            <a
-              href="#"
-              className="block px-6 py-3 font-semibold border-b hover:opacity-70 border-blue-50"
-            >
-              Services
-            </a>
-            <a
-              href="#"
-              className="block px-6 py-3 font-semibold border-b hover:opacity-70 border-blue-50"
-            >
-              Pricing
-            </a>
-            <a
-              href="#"
-              className="block px-6 py-3 font-semibold border-b hover:opacity-70 border-blue-50"
-            >
-              Blog
-            </a>
-            <a
-              href="#"
-              className="block px-6 py-3 font-semibold border-b hover:opacity-70 border-blue-50"
-            >
-              Contact
-            </a>
-            <a
-              href="#"
-              className="block px-6 py-3 font-bold border-b hover:opacity-70 border-blue-50"
-            >
-              Sign in
-            </a>
-          </nav>
-        </div>
       </div>
     </div>
   </header>

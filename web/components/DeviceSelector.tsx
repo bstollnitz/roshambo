@@ -15,13 +15,19 @@ export const DeviceSelector = ({onSelect}: DeviceProps) => {
     (async () => {
       const d = await getMediaDevices()
       setDevices(d)
+      selectDevice()
     })()
   })
 
   return (
-    <select ref={selectEl} title="Select Video Camera" onInput={selectDevice}>
-      {devices.map(d => (<option key={d.deviceId} value={d.deviceId}>{d.label}</option>))}
-    </select>
+    <>
+      <span className="mr-2">Select a camera:</span>
+      <select ref={selectEl} title="Select Video Camera" onInput={selectDevice}>
+        {devices.map((d, i) =>
+          (<option key={d.deviceId} value={d.deviceId}>{d.label || `Device ${i}`}</option>))
+        }
+      </select>
+    </>
   )
 }
 
