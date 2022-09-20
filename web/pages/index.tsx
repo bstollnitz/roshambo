@@ -25,7 +25,7 @@ export default function Home() {
   const [videoId, setVideoId] = useState<string>("");
   const [settings, setSettings] = useState<MediaTrackSettings>({});
   const [prediction, setPrediction] = useState<Prediction | null>(null);
-  const image = useRef<HTMLImageElement>(null);
+  const [imageSrc, setImageSrc] = useState<string>("")
   const videoRef = useRef <VideoRef>(null);
 
   const setFrame = (frame: string) => {
@@ -38,9 +38,7 @@ export default function Home() {
         },
       };
 
-      if (image.current) {
-        image.current.src = frame;
-      }
+      setImageSrc(frame)
       const response = await fetch("/api/analyze", options);
       const pred: Prediction = await response.json();
       console.log('API returned', pred)
@@ -88,31 +86,33 @@ export default function Home() {
             </button>
           </div>
           <div className="px-6 pt-6 pb-6 bg-gray-200 rounded">
-            <div>
-              <img
-                ref={image}
-                alt="current"
-                className="mt-3 border border-gray-500 border-solid"
-              />
-            </div>
-            <div className="text-red-600 text-5xl font-bold">
-              {prediction?.prediction}
-            </div>
-            <ul className="text-lg">
-              <li>
-                none: {((prediction?.scores.none ?? 0) * 100).toFixed(2)}%
-              </li>
-              <li>
-                paper: {((prediction?.scores.paper ?? 0) * 100).toFixed(2)}%
-              </li>
-              <li>
-                rock: {((prediction?.scores.rock ?? 0) * 100).toFixed(2)}%
-              </li>
-              <li>
-                scissors:{" "}
-                {((prediction?.scores.scissors ?? 0) * 100).toFixed(2)}%
-              </li>
-            </ul>
+            {imageSrc &&
+              <>
+                <img
+                  src={imageSrc}
+                  alt="current"
+                  className="mt-3 border border-gray-500 border-solid"
+                />
+                <div className="text-red-600 text-5xl font-bold">
+                  {prediction?.prediction}
+                </div>
+                <ul className="text-lg">
+                  <li>
+                    none: {((prediction?.scores?.none ?? 0) * 100).toFixed(2)}%
+                  </li>
+                  <li>
+                    paper: {((prediction?.scores?.paper ?? 0) * 100).toFixed(2)}%
+                  </li>
+                  <li>
+                    rock: {((prediction?.scores?.rock ?? 0) * 100).toFixed(2)}%
+                  </li>
+                  <li>
+                    scissors:{" "}
+                    {((prediction?.scores?.scissors ?? 0) * 100).toFixed(2)}%
+                  </li>
+                </ul>
+              </>
+            }
           </div>
         </div>
       </div>
